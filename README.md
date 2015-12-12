@@ -4,10 +4,12 @@
 This API is an adaptation of the SafeFrames initiative, allowing ads to be responsive while served inside an iFrame. There are two main parts of this process.. the pub-side file, and the ad-side code. The pub-side file lives on the publisher page and acts as a bridge to the ad-side code that posts messages and directions to be carried out.
 
 
+
 ### Requirements
 1. The publisher must have the resp.lib.js file included on their page prior to the ad being served.
 2. The creative must have the API class included in order to initialize and use the Responsive iFrame API.
 3. The placements must define the variable “prPlacementId” to the placement id. This is imperative so that the API has a reference to which placement should be utilized, especially if there’s more than one PointRoll ad on the page. This is the id that is sent to the initialization function of the API.
+
 
 
 ### Known Limitations
@@ -15,8 +17,10 @@ This API is an adaptation of the SafeFrames initiative, allowing ads to be respo
 2. If the iFrame is not PointRoll generated, the tag may not be altered to use the ads.pointroll call as the source. This will result in a double nested iFrames and the API will not work. 
 
 
+
 ### Library Definition
 In order to communicate out to the publisher page, you must include the prAdConnection class within the creative. This serves as the bridge between the ad and the publisher page by sending and receiving calls.
+
 
 
 ### Initialization
@@ -25,6 +29,8 @@ Create an instance of the ad side library by setting a reference variable to the
 ```
 var _pr_ad_connection = new prAdConnection(true, callback);
 ```
+
+
 
 **createConnection** - function(*ad wrapper id, break points, id, ad slot index*)
 
@@ -46,6 +52,7 @@ _pr_ad_connection.createConnection(document.getElementById(‘pr-wrap’, _pr_re
 ```
 
 
+
 ### Other Ad-Side Functions
 
 **addPageListener** - function(*target, type, callback*)
@@ -53,8 +60,11 @@ _pr_ad_connection.createConnection(document.getElementById(‘pr-wrap’, _pr_re
 Add listeners to the publisher page.
 
 *Parameters:*
+
 target (string) - This is the element you are adding the listener to. Should be either “window”, “document”, or a specific element ID.
+
 type (string) - The listener in which you are adding to the target i.e. “mouseover”, “scroll”, or “click”. 
+
 callback (function) - The listener’s handler function that should be called when the listener is fired. See appendix for details on the returned event object.3
 
 ```
@@ -69,6 +79,8 @@ function windowScrollHandler(event){
 }
 ```
 
+
+
 **closeAd** – function(*no parameters*) 
 
 Completely removes the ad from the page and destroys the connection.
@@ -76,6 +88,8 @@ Completely removes the ad from the page and destroys the connection.
 ``` 
 _pr_ad_connection.closeAd();
 ```
+
+
 
 **getAdSlotSize** – function(*no parameters*) -> *read only*
 
@@ -85,6 +99,8 @@ Returns an object containing the ad slot width and height. *Please note, due to 
 var _pr_slot_width = _pr_ad_connection.getAdSlotSize().width; 
 ```
 
+
+
 **getBrowserInfo** – function(*no parameters*) -> *read only*
 
 Returns an object containing the browser type, browser version, device type, and device version.
@@ -92,6 +108,8 @@ Returns an object containing the browser type, browser version, device type, and
 ``` 
 _pr_ad_connection.getBrowserInfo();
 ```
+
+
 
 **getPubPageInfo** – function(*no parameters*) -> *read only*
 
@@ -101,24 +119,32 @@ Returns an object containing the window width/height, body width/height, window 
 var _window_width = _pr_ad_connection.getPubPageInfo().window.width; 
 ```
 
+
+
 **log** - function(*message*)
 
 Use this instead of console.log in order to only fire a console log if the debug mode has been set to true.
 
 *Parameters:*
+
 message (string) - Message to be logged.
 
 ```
 _pr_ad_connection.log(‘function has completed’); 
 ```
 
+
+
 **removePageListener** - function(*target, type, callback*)
 
 Removes listeners from the publisher page.
 
 *Parameters:*
+
 target (string) - This is the element you are adding the listener to. Should be either “window”, “document”, or a specific element ID.
+
 type (string) - The listener in which you are adding to the target i.e. “mouseover”, “scroll”, or “click”. 
+
 callback (function) - The listener’s handler function that should be called when the listener is fired. See appendix for details on the returned event object.3
 
 ```
@@ -130,6 +156,7 @@ _pr_ad_connection.removePageListener(‘window’, ‘resize’, function(event)
 ```
 
 
+
 ### Receiving Pub-Side Messages
 
 **updateAdSize** – callback function(*size, type*)
@@ -137,7 +164,9 @@ _pr_ad_connection.removePageListener(‘window’, ‘resize’, function(event)
 Once the connection is made between the ad and the publisher page, the pub-side file will begin broadcasting the browser width and height to the iFrame. The ad-side API object will determine if a new break point has been reached and then fire a callback with the new size. This is where the ad should handle the responsive portion of the creative build. With the updated size comes the type parameter that determines whether the new size is in regards to the browser width or height. Use a switch-case statement to make your creative changes based on the current ad size. Define this callback with your creative script code.
 
 *Parameters:*
+
 size (number) - The size will be returned in the form of a number index correlating to the break points you define. 
+
 type (string) - This will return whether the size callback is for “width” or “height”.
 
 ```
@@ -158,6 +187,8 @@ _pr_ad_connection.updateAdSize = function(size, type){
 }
 ```
 
+
+
 **fireNonImpression** – callback function(*no parameters*)
 
 If the ad is hidden on the initial view, this callback function will fire off to give the ad the opportunity to either track or react to this event in other ways. This callback will not fire off if the ad is initially viewed and then hidden, or on subsequent hides.
@@ -167,6 +198,7 @@ _pr_ad_connection.fireNonImpression = function(){
 	//fire non-impression pointroll activity here
 }
 ```
+
 
 
 ### Sending Messages To The Pub-Side File
