@@ -12,14 +12,14 @@ This API is an adaptation of the SafeFrames initiative, allowing ads to be respo
 1. The ad must be in an iFrame. The iFrame can be PointRoll or site generated.
 2. If the iFrame is not PointRoll generated, the tag may not be altered to use the ads.pointroll call as the source. This will result in a double nested iFrames and the API will not work. 
 
-## Library Definition
+### Library Definition
 In order to communicate out to the publisher page, you must include the prAdConnection class within the creative. This serves as the bridge between the ad and the publisher page by sending and receiving calls.
 
-## Initialization
+#### Initialization
 Create an instance of the ad side library by setting a reference variable to the class. This accepts an optional boolean parameter that can be used to enable the debug mode which will show console logs in a browser’s web inspector. If no boolean is passed, it will default to false. The second parameter is a callback that will receive “success” or “failure” based on whether or not the connection is made.
 
-*Example*
+	*Example*
 
-```
-var _pr_ad_connection = new prAdConnection(true, callback);
-```
+	```
+	var _pr_ad_connection = new prAdConnection(true, callback);
+	```
