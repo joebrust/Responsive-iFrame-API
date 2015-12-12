@@ -3,17 +3,21 @@
 ### Introduction
 This API is an adaptation of the SafeFrames initiative, allowing ads to be responsive while served inside an iFrame. There are two main parts of this process.. the pub-side file, and the ad-side code. The pub-side file lives on the publisher page and acts as a bridge to the ad-side code that posts messages and directions to be carried out.
 
+
 ### Requirements
 1. The publisher must have the resp.lib.js file included on their page prior to the ad being served.
 2. The creative must have the API class included in order to initialize and use the Responsive iFrame API.
 3. The placements must define the variable “prPlacementId” to the placement id. This is imperative so that the API has a reference to which placement should be utilized, especially if there’s more than one PointRoll ad on the page. This is the id that is sent to the initialization function of the API.
 
+
 ### Known Limitations
 1. The ad must be in an iFrame. The iFrame can be PointRoll or site generated.
 2. If the iFrame is not PointRoll generated, the tag may not be altered to use the ads.pointroll call as the source. This will result in a double nested iFrames and the API will not work. 
 
+
 ### Library Definition
 In order to communicate out to the publisher page, you must include the prAdConnection class within the creative. This serves as the bridge between the ad and the publisher page by sending and receiving calls.
+
 
 ### Initialization
 Create an instance of the ad side library by setting a reference variable to the class. This accepts an *optional* boolean parameter that can be used to enable the debug mode which will show console logs in a browser’s web inspector. If no boolean is passed, it will default to false. The second parameter is a callback that will receive “success” or “failure” based on whether or not the connection is made.
@@ -27,16 +31,20 @@ var _pr_ad_connection = new prAdConnection(true, callback);
 When the ad is ready, make this call to create the connection between the pub-side file and the ad.
 
 *Parameters:*
+
 ad wrapper id (string) - ID of the ad’s outer most div.
+
 break points (object) - An object of break points the ad intends to use. This object should be comprised of a “width” and “height” key with values of type array with the break points inside.
+
 id (number or string) - The PointRoll placement ID associated with the ad.1
-ad slot index (number or string)
-A reference to the number of divs the iFrame is nested in on the publisher page.2
+
+ad slot index (number or string) - A reference to the number of divs the iFrame is nested in on the publisher page.2
 
 ```
 var _pr_responsive_break_points = {‘width’: [468, 728, 2014], ‘height’: []};
 _pr_ad_connection.createConnection(document.getElementById(‘pr-wrap’, _pr_responsive_break_points, 217382, 3);
 ```
+
 
 ### Other Ad-Side Functions
 
@@ -121,6 +129,7 @@ _pr_ad_connection.removePageListener(‘window’, ‘resize’, function(event)
 });
 ```
 
+
 ### Receiving Pub-Side Messages
 
 **updateAdSize** – callback function(*size, type*)
@@ -159,6 +168,7 @@ _pr_ad_connection.fireNonImpression = function(){
 }
 ```
 
+
 ### Sending Messages To The Pub-Side File
 
 **sendMessageToPub** – function(*message*)
@@ -171,6 +181,7 @@ message (object) - The message is compiled of the pub-side call and the paramete
 ```
 _pr_ad_connection.sendMessageToPub({‘setAdSize’: ‘100%,250’, ‘addCustomStyles’: ‘margin=20px 0px 20px 0px;’});
 ```
+
 
 ### Available Messages
 
@@ -310,11 +321,13 @@ tag (string) -> *optional* - Make the new div wrapper a different tag type other
 _pr_ad_connection.sendMessageToPub({‘wrapElements’: {‘id’: ‘wrapper’, ‘elements’: ‘#movingid, .movingclass’}});
 ```
 
+
 ### Appendix
 
 1. There is no PointRoll macro associate with this ID so the best way to obtain this would be to either hard code it in the main ad script file or set it as a variable at the placement level and access that variable.
 2. When the ad is served to the page, it’s not necessarily served as the next child of the ad slot. Sometimes it can be nested within multiple divs. In most cases, this means that applying styles to just the parent node of our iFrame may not be enough. For example, if we are in a div that has a parent node with a height style set, we can’t just set the height of the div we’re inside. By setting the ad slot index to 2, the API now knows which parent node to access.
 3. All callback functions will be sent a copy of the event object returned at the pub level. For listeners like window scroll and window resize, the information needed cannot be found in the standard event. Window scroll handlers usually use window.scrollX/Y and window resize usually uses window.innerWidth/Height. For these two examples specifically, the scrollX/Y and innerWidth/Height can be accessed via the event parameter sent to the callback function. For example, instead of using window.scrollY, use event.scrollY. Also, all events will get returned a “rect” key that corresponds to the iFrame getBoundingClientRect property.
+
 
 ### Change Log
 *Updated on 4/8/15*
